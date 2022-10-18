@@ -3,6 +3,9 @@ const express = require('express')
 const app = express()
 app.use(express.json())
 const cors = require('cors')
+const mongoose = require('mongoose')
+const url =`mongodb+srv://ramirofullstack:// Dont include password @cluster0.hjvt6jh.mongodb.net/PhonebookApp?retryWrites=true&w=majority`
+mongoose.connect(url)
 app.use(cors())
 app.use(express.static('build'))
  // app.use(morgan('tiny'))
@@ -15,8 +18,9 @@ app.use(express.static('build'))
       return " ";
     }
   })
+
   
-  app.use(morgan(':method :url :status :res[content-length] - :response-time ms :content'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :content'))
 
 let persons = [
   { 
@@ -41,9 +45,6 @@ let persons = [
   }
 ]
 
-app.get('/api/persons',(req,res)=>{
-  res.json(persons)
-})
 
 app.get('/info',(req,res)=>{
    const utcDate1 = new Date(Date.now())
@@ -105,3 +106,16 @@ app.post('/api/persons',(req,res)=>{
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
   })
+
+const personSchema= new mongoose.Schema({
+  name: String,
+  number: String,
+})
+
+const Person = mongoose.model('Person', personSchema)
+
+app.get('/api/persons', (request, response) => {
+  Person.find({}).then(persons => {
+    response.json(persons)
+  })
+})
