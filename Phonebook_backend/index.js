@@ -3,7 +3,6 @@ const app = express()
 const cors = require('cors')
 const morgan = require('morgan')
 require('dotenv').config()
-
 const Person = require('./models/person')
 
 app.use(express.json())
@@ -22,8 +21,6 @@ morgan.token('content', (req, res) => {
     return " ";
   }
 })
-
-
 
 let persons = [
   {
@@ -69,15 +66,6 @@ app.delete('/api/persons/:id', (req, res) => {
   persons = persons.filter(person => person.id != id)
   res.status(204).end()
 })
-
-const generateId = () => {
-  min = 0
-  max = 1000000
-  const randomId = persons.length > 0
-    ? Math.floor(Math.random() * (max - min + 1) + min)
-    : 0
-  return randomId
-}
 
 /*
 app.post('/api/persons', (req, res) => {
@@ -154,8 +142,8 @@ app.post('/api/persons', (request, response) => {
 })
 
 app.get('/api/notes/:id', (request, response) => {
-  Note.findById(request.params.id).then(note => {
-    response.json(note)
+  Person.findById(request.params.id).then(person => {
+    response.json(person)
   })
 })
 
