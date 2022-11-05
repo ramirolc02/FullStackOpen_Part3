@@ -1,4 +1,5 @@
 require('dotenv').config()
+
 const express = require('express')
 const app = express()
 const cors = require('cors')
@@ -129,6 +130,7 @@ app.put('/api/persons/:id', (request, response, next) => {
 })
 
 const errorHandler = (error, request, response, next) => {
+  
   console.error(error.message)
 
   if (error.name === 'CastError') {
