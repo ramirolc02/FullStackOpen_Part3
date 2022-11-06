@@ -6,6 +6,7 @@ const cors = require('cors')
 const morgan = require('morgan')
 
 const Person = require('./models/person')
+const { request } = require('express')
 
 app.use(express.static('build'))
 app.use(express.json())
@@ -75,6 +76,8 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
+
+
 app.post('/api/persons', (request, response) => {
   const body = request.body
 
@@ -114,6 +117,13 @@ app.get('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
+app.get('/info', (request,response,next) => {
+  Person.find({}).then(persons => {
+    response.send(`<p>Phonebook has ${persons.length} registered people </p> <p> Date : ${new Date()} </p>`)
+  })
+    .catch(error => next(error))
+});
+
 app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
 
@@ -130,7 +140,7 @@ app.put('/api/persons/:id', (request, response, next) => {
 })
 
 const errorHandler = (error, request, response, next) => {
-  
+
   console.error(error.message)
 
   if (error.name === 'CastError') {
