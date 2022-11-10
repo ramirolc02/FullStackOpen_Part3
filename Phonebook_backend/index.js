@@ -76,7 +76,7 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
-app.post('/api/persons', (request, response,next) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
   if (body.name === undefined) {
@@ -94,12 +94,12 @@ app.post('/api/persons', (request, response,next) => {
   person.save().then(savedPerson => {
     response.json(savedPerson)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
-    .then( result => {
+    .then(result => {
       res.status(204).end()
     })
     .catch(error => next(error))
@@ -116,7 +116,7 @@ app.get('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.get('/info', (request,response,next) => {
+app.get('/info', (request, response, next) => {
   Person.find({}).then(persons => {
     response.send(`<p>Phonebook has ${persons.length} registered people </p> <p> Date : ${new Date()} </p>`)
   })
@@ -131,7 +131,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     number: body.number,
   }
 
-  Person.findByIdAndUpdate(request.params.id, person, { new: true, runValidators:true, context:'query' })
+  Person.findByIdAndUpdate(request.params.id, person, { new: true, runValidators: true, context: 'query' })
     .then(updatePerson => {
       response.json(updatePerson)
     })
@@ -144,7 +144,7 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-  }else if (error.name === 'ValidationError') {
+  } else if (error.name === 'ValidationError') { // working
     return response.status(400).json({ error: error.message })
   }
   next(error)
