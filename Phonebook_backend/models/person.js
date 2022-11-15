@@ -18,6 +18,21 @@ mongoose.connect(url)
            required: true
             },
     number: { type: String,
+              minLength:8,
+              validate:{
+                validator: function(v){
+                  if(number.length>=8 ){
+                    return true;
+                }
+                message = 'Number should be atleast 8 digits'
+                },
+                validator: function(number){
+                  if(number[2] === '-' || number[3] === '-'){
+                      return /^[0-9]{2,3}-[0-9]+$/.test(number);
+                  }
+                },
+                message: props => `${props.value} is not a valid phone number!`
+              },
               required: true
             },
   })
