@@ -91,11 +91,14 @@ app.post('/api/persons', (request, response, next) => {
     number: body.number,
   })
 
-  person.save().then(savedPerson => {
-    response.json(savedPerson)
+  if (Person.find({ name: body.name }).length > 0) {
+    return response.status(400).json({ error: 'Post name is already in the phonebook' })
+  }
+    person.save().then(savedPerson => {
+      response.json(savedPerson)
+    })
+      .catch(error => next(error))
   })
-    .catch(error => next(error))
-})
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
