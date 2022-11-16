@@ -6,7 +6,7 @@ const cors = require('cors')
 const morgan = require('morgan')
 
 const Person = require('./models/person')
-const { request } = require('express')
+// const { request } = require('express')
 
 app.use(express.static('build'))
 app.use(express.json())
@@ -17,12 +17,12 @@ app.use(morgan('tiny'))
 // app.use(morgan(':method :url :status :res[content-length] - :response-time ms :content'))
 
 
-morgan.token('content', (req, res) => {
-  if (req.method === "POST") {
+morgan.token('content', (req) => {
+  if (req.method === 'POST') {
     return JSON.stringify(req.body)
   }
   else {
-    return " ";
+    return ' '
   }
 })
 
@@ -94,15 +94,15 @@ app.post('/api/persons', (request, response, next) => {
   if (Person.find({ name: body.name }).length > 0) {
     return response.status(400).json({ error: 'Post name is already in the phonebook' })
   }
-    person.save().then(savedPerson => {
-      response.json(savedPerson)
-    })
-      .catch(error => next(error))
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
   })
+    .catch(error => next(error))
+})
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
-    .then(result => {
+    .then(() => {
       res.status(204).end()
     })
     .catch(error => next(error))
@@ -125,7 +125,7 @@ app.get('/info', (request, response, next) => {
     response.send(`<p>Phonebook has ${persons.length} registered people </p> <p> Date : ${new Date()} </p>`)
   })
     .catch(error => next(error))
-});
+})
 
 app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
@@ -156,6 +156,7 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler)
 
+// eslint-disable-next-line no-undef
 const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
